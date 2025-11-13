@@ -1,0 +1,245 @@
+#!/bin/bash
+# OrgSecScanner - Unified Network Security Assessment Tool
+
+# Tool information
+VERSION="1.0.0"
+AUTHOR="Organization Security Team"
+
+# Get the script directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONFIG_FILE="$SCRIPT_DIR/../config/settings.conf"
+BASE_DIR="$SCRIPT_DIR/.."
+
+# Color codes for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Default configuration values
+DEFAULT_NETWORK="10.10.84.0/24"
+SCAN_TIMING="-T4"
+MAX_RETRIES="1"
+HOST_TIMEOUT="30s"
+CRITICAL_HOSTS=("10.10.84.251" "10.10.84.252" "10.10.84.253" "10.10.84.254" "10.10.84.33")
+HIGH_RISK_PORTS=("21" "23" "135" "139" "445" "3389")
+
+# Load configuration if exists
+load_configuration() {
+    if [ -f "$CONFIG_FILE" ]; then
+        source "$CONFIG_FILE"
+        echo -e "${GREEN}[CONFIG] Configuration loaded from $CONFIG_FILE${NC}"
+    else
+        echo -e "${YELLOW}[CONFIG] Using default configuration${NC}"
+    fi
+}
+
+# Main function
+main() {
+    clear
+    show_banner
+    load_configuration
+    check_dependencies
+    
+    case "${1:-}" in
+        "discover")
+            run_discovery "${2:-$DEFAULT_NETWORK}"
+            ;;
+        "assess")
+            run_assessment "${2:-}"
+            ;;
+        "remediate")
+            show_remediation
+            ;;
+        "report")
+            generate_report
+            ;;
+        "monitor")
+            run_monitoring
+            ;;
+        "auto")
+            run_automated_scan
+            ;;
+        "--help"|"-h"|"")
+            show_help
+            ;;
+        "--version"|"-v")
+            show_version
+            ;;
+        *)
+            echo -e "${RED}Unknown command: $1${NC}"
+            show_help
+            ;;
+    esac
+}
+
+# Display banner
+show_banner() {
+    echo -e "${BLUE}"
+    cat << "BANNER"
+   ___                  ____                  
+  / _ \ ___ _______ ___/ ___| ___ _ __   ___  
+ | (_) / _ \_  / _ \__ \___ \/ __| '_ \ / _ \ 
+  \__, \___// /  __/__/ ___) \__ \ |_) |  __/ 
+   /_/     /___\___|  |____/|___/ .__/ \___| 
+                                |_|          
+        Organization Security Scanner
+BANNER
+    echo -e "${NC}Version: $VERSION"
+    echo "=========================================="
+    echo ""
+}
+
+# Check dependencies
+check_dependencies() {
+    local deps=("nmap" "awk" "grep" "sed")
+    local missing=()
+    
+    for dep in "${deps[@]}"; do
+        if ! command -v "$dep" &> /dev/null; then
+            missing+=("$dep")
+        fi
+    done
+    
+    if [ ${#missing[@]} -ne 0 ]; then
+        echo -e "${RED}Missing dependencies: ${missing[*]}${NC}"
+        echo "Please install required packages before continuing."
+        exit 1
+    fi
+}
+
+# Show help
+show_help() {
+    echo "Usage: $0 [COMMAND] [TARGET]"
+    echo ""
+    echo "Commands:"
+    echo "  discover [NETWORK]    Discover network devices (default: $DEFAULT_NETWORK)"
+    echo "  assess [TARGET]       Security assessment of target or all devices"
+    echo "  remediate             Show remediation guidance for found issues"
+    echo "  report                Generate comprehensive security report"
+    echo "  monitor               Continuous security monitoring"
+    echo "  auto                  Run complete automated security scan"
+    echo "  --help, -h           Show this help message"
+    echo "  --version, -v        Show version information"
+    echo ""
+    echo "Examples:"
+    echo "  $0 discover 10.10.84.0/24"
+    echo "  $0 assess 10.10.84.253"
+    echo "  $0 auto"
+    echo ""
+}
+
+# Show version
+show_version() {
+    echo "OrgSecScanner v$VERSION"
+    echo "Author: $AUTHOR"
+}
+
+# Run discovery module
+run_discovery() {
+    local network="${1:-$DEFAULT_NETWORK}"
+    echo -e "${BLUE}[INFO] Starting network discovery for: $network${NC}"
+    source "$BASE_DIR/modules/discovery.sh"
+    discover_network "$network"
+}
+
+# Run assessment module
+run_assessment() {
+    local target="${1:-all}"
+    echo -e "${BLUE}[INFO] Starting security assessment for: $target${NC}"
+    source "$BASE_DIR/modules/assessment.sh"
+    assess_security "$target"
+}
+
+# Show remediation
+show_remediation() {
+    echo -e "${BLUE}[INFO] Generating remediation guidance${NC}"
+    source "$BASE_DIR/modules/remediation.sh"
+    show_remediation_guidance
+}
+
+# Generate report
+generate_report() {
+    echo -e "${BLUE}[INFO] Generating security report${NC}"
+    source "$BASE_DIR/modules/reporting.sh"
+    generate_security_report
+}
+
+# Run monitoring
+run_monitoring() {
+    echo -e "${BLUE}[INFO] Starting security monitoring${NC}"
+    monitor_security
+}
+
+# Run automated scan
+run_automated_scan() {
+    echo -e "${BLUE}[INFO] Starting automated security scan${NC}"
+    run_discovery "$DEFAULT_NETWORK"
+    run_assessment "all"
+    generate_report
+    show_remediation
+}
+
+# Security monitoring function
+monitor_security() {
+    echo -e "${YELLOW}[MONITOR] Security monitoring started...${NC}"
+    echo "Press Ctrl+C to stop monitoring"
+    
+    while true; do
+        echo -e "\n${BLUE}[$(date)] Checking network status...${NC}"
+        
+        # Check critical services
+        check_critical_services
+        
+        # Check for new devices
+        check_network_changes
+        
+        # Wait before next check
+        sleep 300  # 5 minutes
+    done
+}
+
+# Check critical services
+check_critical_services() {
+    for host in "${CRITICAL_HOSTS[@]}"; do
+        if ping -c 1 -W 2 "$host" &> /dev/null; then
+            echo -e "  ${GREEN}✅ $host - ONLINE${NC}"
+        else
+            echo -e "  ${RED}❌ $host - OFFLINE${NC}"
+            log_alert "CRITICAL: Host $host is offline"
+        fi
+    done
+}
+
+# Check for network changes
+check_network_changes() {
+    local current_count
+    current_count=$(nmap -sn "$DEFAULT_NETWORK" | grep -c "Host is up")
+    
+    if [ -f "$BASE_DIR/data/device_baseline.txt" ]; then
+        local baseline_count
+        baseline_count=$(cat "$BASE_DIR/data/device_baseline.txt")
+        
+        if [ "$current_count" -gt "$baseline_count" ]; then
+            echo -e "  ${RED}🚨 ALERT: New devices detected on network${NC}"
+            log_alert "NETWORK_CHANGE: New devices detected - Current: $current_count, Baseline: $baseline_count"
+        elif [ "$current_count" -lt "$baseline_count" ]; then
+            echo -e "  ${YELLOW}⚠️  WARNING: Devices missing from network${NC}"
+        fi
+    else
+        echo "$current_count" > "$BASE_DIR/data/device_baseline.txt"
+        echo -e "  ${GREEN}📊 Baseline set: $current_count devices${NC}"
+    fi
+}
+
+# Log alerts
+log_alert() {
+    local message="$1"
+    local timestamp
+    timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+    echo "[$timestamp] ALERT: $message" >> "$BASE_DIR/logs/security_alerts.log"
+}
+
+# Run main function
+main "$@"

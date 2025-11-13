@@ -1,0 +1,19 @@
+# Ignore scan data and reports
+/data/
+/reports/
+/logs/
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore backup files
+*.backup
+*.tmp
+
+# Ignore sensitive configuration
+config/settings.conf
+
+# Ignore personal files
+personal/
+temp/
