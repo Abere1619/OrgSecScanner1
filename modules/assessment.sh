@@ -135,3 +135,16 @@ assess_single_device() {
     echo -e "${BLUE}[ASSESSMENT] Assessing single device: $target${NC}"
     assess_network_device "$target" "$assessment_dir"
 }
+
+# External network assessment
+assess_external_network() {
+    local network="$1"
+    
+    echo -e "${YELLOW}[EXTERNAL] Scanning external network: $network${NC}"
+    echo -e "${RED}⚠️  Ensure you have permission to scan this network!${NC}"
+    
+    # Use slower timing for external networks
+    nmap -T2 -F "$network" -oA "../data/external_scan_$(date +%Y%m%d_%H%M%S)"
+    
+    echo -e "${GREEN}[EXTERNAL] External assessment completed${NC}"
+}

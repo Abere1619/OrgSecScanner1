@@ -1,0 +1,4 @@
+# Nmap 7.95 scan initiated Thu Nov 13 14:09:17 2025 as: /snap/nmap/4171/usr/bin/nmap -T2 -sn -oA /home/abe/OrgSecScanner/data/external_advanced_20251113_140803/1_host_discovery 8.8.8.8
+Nmap scan report for dns.google (8.8.8.8)
+Host is up (0.11s latency).
+# Nmap done at Thu Nov 13 14:09:21 2025 -- 1 IP address (1 host up) scanned in 3.51 seconds

@@ -1,0 +1,42 @@
+--- bin/orgsec-scanner.original
++++ bin/orgsec-scanner.fixed
+@@ -1,5 +1,5 @@
+ # Add this to the case statement in main() function:
+-        # Add external scanning commands here
++        "external-scan")
++            run_external_scan "${2:-}"
++            ;;
++        "external-quick")
++            run_external_quick "${2:-}"
++            ;;
++        "external-practice")
++            run_external_practice
++            ;;
+ 
+ # Add these functions before the main call:
++run_external_scan() {
++    local target="${1:-}"
++    if [ -z "$target" ]; then
++        echo -e "${RED}Please specify a target${NC}"
++        echo "Usage: $0 external-scan TARGET"
++        return 1
++    fi
++    echo -e "${BLUE}[EXTERNAL] Running external scan${NC}"
++    ./scripts/external_scanner.sh scan "$target"
++}
++
++run_external_quick() {
++    local target="${1:-}"
++    if [ -z "$target" ]; then
++        echo -e "${RED}Please specify a target${NC}"
++        echo "Usage: $0 external-quick TARGET"
++        return 1
++    fi
++    echo -e "${BLUE}[EXTERNAL] Running quick external scan${NC}"
++    ./scripts/external_scanner.sh quick "$target"
++}
++
++run_external_practice() {
++    echo -e "${BLUE}[EXTERNAL] Safe practice mode${NC}"
++    ./scripts/external_scanner.sh practice
++}

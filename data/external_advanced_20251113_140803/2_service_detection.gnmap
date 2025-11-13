@@ -1,0 +1,1 @@
+# Nmap 7.95 scan initiated Thu Nov 13 14:09:21 2025 as: /snap/nmap/4171/usr/bin/nmap -T2 -sV -sC -oA /home/abe/OrgSecScanner/data/external_advanced_20251113_140803/2_service_detection 8.8.8.8
