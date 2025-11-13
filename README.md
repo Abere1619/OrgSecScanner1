@@ -22,8 +22,8 @@ git clone https://github.com/Abere1619/OrgSecScanner1.git
 cd OrgSecScanner1
 
 # Install and setup
-chmod +x install.sh
-./install.sh
+chmod +x script./scripts/scripts/install.sh
+./scripts/scripts/install.sh
 
 # Run complete security scan
 ./bin/orgsec-scanner auto
@@ -40,7 +40,7 @@ Prerequisites
 Automated Installation
 bash
 
-./install.sh
+./scripts/scripts/install.sh
 
 Manual Installation
 bash
@@ -104,7 +104,7 @@ OrgSecScanner1/
 ├── modules/             # Functional modules
 ├── scripts/             # Utility scripts
 ├── README.md           # This file
-└── install.sh          # Installation script
+└── scripts/install.sh          # Installation script
 
 🔧 Configuration
 
