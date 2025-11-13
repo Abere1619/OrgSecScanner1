@@ -1,6 +1,6 @@
-# OrgSecScanner - Organization Security Scanner
+# OrgSecScanner1 - Organization Security Scanner
 
-![OrgSecScanner Banner](https://img.shields.io/badge/OrgSecScanner-Security%20Assessment-blue)
+![OrgSecScanner1 Banner](https://img.shields.io/badge/OrgSecScanner1-Security%20Assessment-blue)
 ![Version](https://img.shields.io/badge/Version-1.0.0-green)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
@@ -18,8 +18,8 @@ A comprehensive network security assessment tool for organizations to discover, 
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/OrgSecScanner.git
-cd OrgSecScanner
+git clone https://github.com/Abere1619/OrgSecScanner1.git
+cd OrgSecScanner1
 
 # Install and setup
 chmod +x install.sh
@@ -50,8 +50,8 @@ sudo apt update
 sudo apt install nmap
 
 # Clone repository
-git clone https://github.com/yourusername/OrgSecScanner.git
-cd OrgSecScanner
+git clone https://github.com/Abere1619/OrgSecScanner1.git
+cd OrgSecScanner1
 
 # Set permissions
 chmod +x bin/orgsec-scanner modules/*.sh
@@ -81,7 +81,7 @@ bash
 📊 Sample Output
 text
 
-🛡️ OrgSecScanner - Network Security Assessment
+🛡️ OrgSecScanner1 - Network Security Assessment
 
 📡 Discovery: Found 42 devices
 🔒 Assessment: 1 critical, 3 warning issues
@@ -98,7 +98,7 @@ text
 🏗️ Project Structure
 text
 
-OrgSecScanner/
+OrgSecScanner1/
 ├── bin/                 # Main executable
 ├── config/              # Configuration templates
 ├── modules/             # Functional modules
@@ -146,4 +146,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
     Community contributions welcome
 
-OrgSecScanner - Making organizational security accessible and automated 🔒
+OrgSecScanner1 - Making organizational security accessible and automated 🔒
