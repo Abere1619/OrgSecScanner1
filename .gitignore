@@ -1,28 +1,16 @@
-# Ignore sensitive scan data (actual scan results)
-/data/*.xml
-/data/*.nmap
-/data/*.gnmap
-/data/assessment_*/
-/data/discovery_*/
+# Logs
+logs/
+*.log
 
-# Ignore report content (actual report data)
-/reports/*.txt
-/reports/*.html
-
-# Ignore log content (actual log data)
-/logs/*.log
-
-# Ignore system files
-.DS_Store
-Thumbs.db
-
-# Ignore backup files
-*.backup
+# Temporary files
+tmp/
 *.tmp
 
-# Ignore sensitive configuration (user-specific settings)
-config/settings.conf
+# Sensitive data
+config/sensitive.conf
+*.key
+*.pem
 
-# Ignore personal files
-personal/
-temp/
+# System files
+.DS_Store
+Thumbs.db
