@@ -1,0 +1,28 @@
+# OrgSecScanner Configuration Template
+# Copy this file to settings.conf and edit with your values
+
+# Default network to scan
+DEFAULT_NETWORK="10.10.84.0/24"
+
+# Scan settings
+SCAN_TIMING="-T4"
+MAX_RETRIES="1"
+HOST_TIMEOUT="30s"
+
+# Critical infrastructure devices
+CRITICAL_HOSTS=("10.10.84.251" "10.10.84.252" "10.10.84.253" "10.10.84.254")
+
+# High-risk services to monitor
+HIGH_RISK_PORTS=("21" "23" "135" "139" "445" "3389")
+
+# Security thresholds
+MAX_FTP_SERVERS=0
+MAX_TELNET_SERVERS=0
+MAX_WEAK_SSH=0
+
+# Reporting settings
+REPORT_FORMAT="html"
+AUTO_GENERATE_REPORTS=true
+
+# Logging settings
+LOG_LEVEL="INFO"
